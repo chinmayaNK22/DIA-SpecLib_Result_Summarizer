@@ -1,7 +1,7 @@
 # DIA-SpecLib_Result_Summarizer
 Extract the identified peptides and proteins from spectral library search of DIA proteomic data in Skyline
 
-## How to use Variant-Proteome-DB-Generator
+## How to use Extract-skyline-result python script
 ```
 >python extract_skyline_result.py -h
 usage: extract_skyline_result.py [-h] -ip [-ip ...]
