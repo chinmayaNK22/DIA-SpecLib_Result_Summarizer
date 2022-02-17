@@ -16,3 +16,22 @@ optional arguments:
   -h, --help  show this help message and exit
 
 ```
+
+# iq input generator from Skyline search results
+
+## How to use iq_input_gen.py in Windows/Linux
+```
+>python iq_input_gen.py -h
+usage: iq_input_gen.py [-h] -i [-i ...] -c [-c ...]
+
+Generate a input matrix for the calculation of protein abundance using iq R
+scrip
+
+positional arguments:
+  -i          Skyline output from DIA-Spectral Library search
+  -c          A .txt file consisting the details of condition specific raw
+              files used for the search
+
+optional arguments:
+  -h, --help  show this help message and exit
+ ```
