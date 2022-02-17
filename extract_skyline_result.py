@@ -19,8 +19,9 @@ def get_header_idx(infile):
             z = split_i.index("Precursor Charge")
             raw_file = split_i.index("Replicate")
             miss_cleave_idx = split_i.index("Missed Cleavages")
-            mz = split_i.index("Precursor")
-            return pep_idx, pro_idx, qvalue_idx, z, miss_cleave_idx, mz, raw_file
+            mz = split_i.index("Precursor Mz")
+            rt = split_i.index("Peptide Retention Time")
+            return pep_idx, pro_idx, qvalue_idx, z, miss_cleave_idx, mz, rt, raw_file
 
 def ext_skyline_results(infile):            
     dicts = {}
@@ -68,9 +69,9 @@ def ext_skyline_results(infile):
         precursors = {}
         for j in v:
             if j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]] not in precursors:
-                precursors[j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]]] = [j]
+                precursors[j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]] = [j]
             else:
-                precursors[j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]]].append(j)
+                precursors[j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]].append(j)
                 
         for m, n in precursors.items():
             fdr = ';'.join(j[a[2]] for j in n)
@@ -93,7 +94,7 @@ def ext_skyline_results(infile):
 
     outfile1 = "{0}_raw_file_specific_peptides_and_proteins.txt".format(infile.rstrip('.tsv'))
     with open(outfile1, 'w') as outf1:
-        outf1.write('Raw File\tProtein\tPeptide\tPrecursor\tQ-values\n')
+        outf1.write('Raw File\tProtein\tPeptide\tPrecursor\tRT\tQ-values\n')
         outf1.writelines('\t'.join(i) + '\n' for i in output1)
 
     summrayfile = "{0}_summary.txt".format(infile.rstrip('.tsv'))
