@@ -52,7 +52,7 @@ def gen_iq_input(infile, conditions):
             if split_i[0] in dicts:
                 for j in dicts[split_i[0]]:
                     #print (split_i[0], j[0], j[9], j[6], j[13], j[14], j[-5], j[2], j[0])
-                    output.append([j[a[0]], j[a[1]], j[a[2]], j[a[3]], j[a[4]], j[5], j[6], j[7], j[1]])
+                    output.append([j[a[0]], j[a[1]], j[a[2]], j[a[3]], j[a[4]], j[a[5]], j[a[6]], j[a[7]], j[a[1]]])
 
     print (len(output))
 
