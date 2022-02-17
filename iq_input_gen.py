@@ -8,24 +8,23 @@ parser.add_argument('conditions', metavar='-c', type=str, nargs='+', help='A .tx
 
 args = parser.parse_args()
 
-infile = "Reanalysi_02122021\\NMO_DIA_25Da_PI_6_3_0.02Da_20ppm_spec_lib_search_120221_Result.tsv"
-
-conditions = "NMO_Sample-Condition_Info.txt"
-
 def get_header_idx(infile):
     with open(infile) as file:
         for i in islice(file, 0, 1):
             split_i = i.rstrip().split('\t')
-            pep_idx = split_i.index("Peptide")
-            mod_pep_idx = split_i.index("Modified Sequence")
-            pro_idx = split_i.index("Protein Name")
-            qvalue_idx = split_i.index("Detection Q Value")
-            z = split_i.index("Precursor Charge")
-            raw_file = split_i.index("Replicate")
-            miss_cleave_idx = split_i.index("Missed Cleavages")
-            mz = split_i.index("Precursor Mz")
-            rt = split_i.index("Peptide Retention Time")
-            return pep_idx, pro_idx, qvalue_idx, z, miss_cleave_idx, mz, rt, raw_file, mod_pep_idx
+            try:
+                mod_pep_idx = split_i.index("Modified Sequence")
+                pro_idx = split_i.index("Protein Name")
+                transition_idx = split_i.index("Fragment Ion")
+                area_idx = split_i.index("Area")
+                prec_z = split_i.index("Precursor Charge")
+                product_z = split_i.index("Product Charge")
+                raw_file = split_i.index("Replicate")
+                gene_idx = split_i.index("Protein Gene")
+                return raw_file, pro_idx, mod_pep_idx, prec_z, transition_idx, product_z, area_idx, gene_idx
+            
+            except:
+                print ("Some of the essential columns are missing in the exported results from Skyline document")
 
 
 def get_header(infile):
@@ -53,7 +52,7 @@ def gen_iq_input(infile, conditions):
             if split_i[0] in dicts:
                 for j in dicts[split_i[0]]:
                     #print (split_i[0], j[0], j[9], j[6], j[13], j[14], j[-5], j[2], j[0])
-                    output.append([j[a[-2]], j[a[1]], j[a[-1]], j[a[3]], j[a[]], j[14], j[-5], j[2], j[0]])
+                    output.append([j[a[0]], j[a[1]], j[a[2]], j[a[3]], j[a[4]], j[5], j[6], j[7], j[1]])
 
     print (len(output))
 
