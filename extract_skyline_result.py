@@ -14,6 +14,7 @@ def get_header_idx(infile):
         for i in islice(file, 0, 1):
             split_i = i.rstrip().split('\t')
             pep_idx = split_i.index("Peptide")
+            mod_pep_idx = split_i.index("Modified Sequence")
             pro_idx = split_i.index("Protein Name")
             qvalue_idx = split_i.index("Detection Q Value")
             z = split_i.index("Precursor Charge")
@@ -21,7 +22,7 @@ def get_header_idx(infile):
             miss_cleave_idx = split_i.index("Missed Cleavages")
             mz = split_i.index("Precursor Mz")
             rt = split_i.index("Peptide Retention Time")
-            return pep_idx, pro_idx, qvalue_idx, z, miss_cleave_idx, mz, rt, raw_file
+            return pep_idx, pro_idx, qvalue_idx, z, miss_cleave_idx, mz, rt, raw_file, mod_pep_idx
 
 def ext_skyline_results(infile):            
     dicts = {}
@@ -30,15 +31,15 @@ def ext_skyline_results(infile):
     with open(infile) as file:
         for i in islice(file, 1, None):
             split_i = i.rstrip().split('\t')
-            if split_i[a[0]] + '@' + split_i[a[1]] + '@' + split_i[a[3]] not in dicts:
-                dicts[split_i[a[0]] + '@' + split_i[a[1]] + '@' + split_i[a[3]]] = [split_i]
+            if split_i[a[-1]] + '@' + split_i[a[1]] + '@' + split_i[a[3]] not in dicts:
+                dicts[split_i[a[-1]] + '@' + split_i[a[1]] + '@' + split_i[a[3]]] = [split_i]
             else:
-                dicts[split_i[a[0]] + '@' + split_i[a[1]] + '@' + split_i[a[3]]].append(split_i)
+                dicts[split_i[a[-1]] + '@' + split_i[a[1]] + '@' + split_i[a[3]]].append(split_i)
 
-            if split_i[a[-1]] not in dia_file:
-                dia_file[split_i[a[-1]]] = [split_i]
+            if split_i[a[-2]] not in dia_file:
+                dia_file[split_i[a[-2]]] = [split_i]
             else:
-                dia_file[split_i[a[-1]]].append(split_i)
+                dia_file[split_i[a[-2]]].append(split_i)
 
     pep = {k.split('@')[0]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
     pro = {k.split('@')[1]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
@@ -69,9 +70,9 @@ def ext_skyline_results(infile):
         precursors = {}
         for j in v:
             if j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]] not in precursors:
-                precursors[j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]] = [j]
+                precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]] = [j]
             else:
-                precursors[j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]].append(j)
+                precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]].append(j)
                 
         for m, n in precursors.items():
             fdr = ';'.join(j[a[2]] for j in n)
