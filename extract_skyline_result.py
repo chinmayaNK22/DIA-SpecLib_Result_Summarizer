@@ -32,17 +32,17 @@ def ext_skyline_results(infile):
         for i in islice(file, 1, None):
             split_i = i.rstrip().split('\t')
             if split_i[a[-1]] + '@' + split_i[a[1]] + '@' + split_i[a[3]] not in dicts:
-                dicts[split_i[a[-1]] + '@' + split_i[a[1]] + '@' + split_i[a[3]]] = [split_i]
+                dicts[split_i[a[1]] + '@' + split_i[a[-1]] + '@' + split_i[a[3]]] = [split_i]
             else:
-                dicts[split_i[a[-1]] + '@' + split_i[a[1]] + '@' + split_i[a[3]]].append(split_i)
+                dicts[split_i[a[1]] + '@' + split_i[a[-1]] + '@' + split_i[a[3]]].append(split_i)
 
             if split_i[a[-2]] not in dia_file:
                 dia_file[split_i[a[-2]]] = [split_i]
             else:
                 dia_file[split_i[a[-2]]].append(split_i)
 
-    pep = {k.split('@')[0]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
-    pro = {k.split('@')[1]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
+    pep = {k.split('@')[1]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
+    pro = {k.split('@')[0]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
     summary = [str(len(dicts)), str(len(pep)), str(len(pro))]
     summary_head = ['No. of Precursors','No. of Peptides','No. of Proteins']
     output = []
