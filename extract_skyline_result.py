@@ -1,8 +1,6 @@
 from itertools import islice
 import argparse
 
-#infile = "NMO_DIA_25Da_PI_6_3_0.02Da_20ppm_spec_lib_search_11042021_Result.tsv"
-
 parser = argparse.ArgumentParser(description='''Extract and summarize Skyline results from DIA data analysis against spectral library''')
 
 parser.add_argument('infile', metavar='-ip', type=str, nargs='+', help='Skyline output from DIA-Spectral Library search')
