@@ -38,7 +38,7 @@ def gen_iq_input(infile, conditions):
     with open(infile) as file:
         for i in islice(file, 1, None):
             split_i = i.rstrip().split('\t')
-            sample = split_i[-1].split('_')[0]
+            sample = split_i[a[0]]
             if sample not in dicts:
                 dicts[sample] = [split_i]
             else:
