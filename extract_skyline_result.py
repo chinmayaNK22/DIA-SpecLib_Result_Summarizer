@@ -3,7 +3,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='''Extract and summarize Skyline results from DIA data analysis against spectral library''')
 
-parser.add_argument('infile', metavar='-ip', type=str, nargs='+', help='Skyline output from DIA-Spectral Library search')
+parser.add_argument('infile', metavar='-ip', type=str, nargs='+', help='Skyline output from DIA-Spectral Library search in tab delimitted format (txt/tsv)')
 
 args = parser.parse_args()
 
@@ -12,7 +12,10 @@ def get_header_idx(infile):
         for i in islice(file, 0, 1):
             split_i = i.rstrip().split('\t')
             pep_idx = split_i.index("Peptide")
-            mod_pep_idx = split_i.index("Modified Sequence")
+            try:
+                mod_pep_idx = split_i.index("Modified Sequence")
+            except:
+                mod_pep_idx = split_i.index("Peptide")
             pro_idx = split_i.index("Protein Name")
             qvalue_idx = split_i.index("Detection Q Value")
             z = split_i.index("Precursor Charge")
@@ -22,7 +25,8 @@ def get_header_idx(infile):
             rt = split_i.index("Peptide Retention Time")
             return pep_idx, pro_idx, qvalue_idx, z, miss_cleave_idx, mz, rt, raw_file, mod_pep_idx
 
-def ext_skyline_results(infile):            
+
+def ext_skyline_results(infile):
     dicts = {}
     dia_file = {}
     a = get_header_idx(infile)
