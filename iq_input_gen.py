@@ -14,17 +14,37 @@ def get_header_idx(infile):
             split_i = i.rstrip().split('\t')
             try:
                 mod_pep_idx = split_i.index("Modified Sequence")
-                pro_idx = split_i.index("Protein Name")
-                transition_idx = split_i.index("Fragment Ion")
-                area_idx = split_i.index("Area")
-                prec_z = split_i.index("Precursor Charge")
-                product_z = split_i.index("Product Charge")
-                raw_file = split_i.index("Replicate")
-                gene_idx = split_i.index("Protein Gene")
-                return raw_file, pro_idx, mod_pep_idx, prec_z, transition_idx, product_z, area_idx, gene_idx
-            
             except:
-                print ("Some of the essential columns are missing in the exported results from Skyline document")
+                mod_pep_idx = split_i.index("Peptide")
+            try:
+                pro_idx = split_i.index("Protein Name")
+            except:
+                raise Exception("Column 'Protein Name' is missing the input file. Please export the results from Skyline with 'Protein Name' column.")
+            try:
+                transition_idx = split_i.index("Fragment Ion")
+            except:
+                raise Exception("Column 'Fragment Ion' is missing the input file. Please export the results from Skyline with 'Fragment Ion' column.")
+            try:
+                area_idx = split_i.index("Area")
+            except:
+                raise Exception("Column 'Area' is missing the input file. Please export the results from Skyline with 'Area' column.")
+            try:
+                prec_z = split_i.index("Precursor Charge")
+            except:
+                raise Exception("Column 'Precursor Charge' is missing the input file. Please export the results from Skyline with 'Precursor Charge' column.")
+            try:
+                product_z = split_i.index("Product Charge")
+            except:
+                raise Exception("Column 'Product Charge' is missing the input file. Please export the results from Skyline with 'Product Charge' column.")
+            try:
+                raw_file = split_i.index("Replicate")
+            except:
+                raise Exception("Column 'Replicate' is missing the input file. Please export the results from Skyline with 'Replicate' column.")
+            try:
+                gene_idx = split_i.index("Protein Gene")
+            except:
+                gene_idx = split_i.index("Protein Name")
+            return raw_file, pro_idx, mod_pep_idx, prec_z, transition_idx, product_z, area_idx, gene_idx
 
 
 def get_header(infile):
