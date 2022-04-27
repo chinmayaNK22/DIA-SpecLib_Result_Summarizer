@@ -67,6 +67,7 @@ def ext_skyline_results(infile):
         output.append(k.split('@') + [charge] + [miss_cleave] + [fdr])
 
     raw_file = []
+    length = {}
     for k, v in dia_file.items():
         raw_file.append(k)
         precursors = {}
@@ -75,18 +76,37 @@ def ext_skyline_results(infile):
                 precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]] = [j]
             else:
                 precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]].append(j)
-                
+
+            if len(j[a[-1]]) not in length:
+                length[len(j[a[-1]])] = [j[a[-1]]]
+            else:
+                length[len(j[a[-1]])].append(j[a[-1]])
+
+        print ("Found " + str(len(precursors)) + " peptide precursors with q-value < 0.01 in the raw file " + k)
+        
         for m, n in precursors.items():
             fdr = ';'.join(j[a[2]] for j in n)
             output1.append([k] + m.split('@') + [fdr])
 
+
+    write0 = open("{0}_peptide_length_summary.txt".format(infile.rstrip('.tsv')), 'w')
+    write0.write("Peptide length" + '\t' + "No. of peptides" + '\n')
+    for k, v in length.items():
+        #print ("Peptide length " + str(k) + " = " + str(len(v)) + " peptide precursors")
+        write0.write(str(k) + '\t' + str(len(v)) + '\n')
+    write0.close()  
+
     write1 = open("{0}_Charge_state_summary.txt".format(infile.rstrip('.tsv')), 'w')
+    write1.write("Charge (z)" + '\t' + "Peptide precursors" + '\n')
     for k, v in z.items():
+        print ("Charge " + k + " = " + str(len(v)) + " peptide precursors")
         write1.write(k + '\t' + str(len(v)) + '\n')
     write1.close()
 
     write2 = open("{0}_missed_clavage_summary.txt".format(infile.rstrip('.tsv')), 'w')
+    write2.write("Missed cleavage" + '\t' + "Peptide precursors" + '\n')
     for k, v in mmc.items():
+        print ("There are " + str(len(v)) + " peptide precursors with missed cleavage " + k)
         write2.write(k + '\t' + str(len(v)) + '\n')
     write2.close()
                   
@@ -97,11 +117,12 @@ def ext_skyline_results(infile):
 
     outfile1 = "{0}_raw_file_specific_peptides_and_proteins.txt".format(infile.rstrip('.tsv'))
     with open(outfile1, 'w') as outf1:
-        outf1.write('Raw File\tProtein\tPeptide\tPrecursor\tRT\tQ-values\n')
+        outf1.write('Raw File\tPeptide\tModified Peptide\tProtein\tPrecursor\tRT\tQ-values\n')
         outf1.writelines('\t'.join(i) + '\n' for i in output1)
 
     summrayfile = "{0}_summary.txt".format(infile.rstrip('.tsv'))
     with open(summrayfile, 'w') as sumf:
+        print ("In total, there are " + summary[0] + " peptide precursors, " + summary[1] + " peptide sequences corresponding to " + summary[2] + " proteins observed")
         sumf.write('\t'.join(summary_head) + '\n')
         sumf.write('\t'.join(summary) + '\n')
 
