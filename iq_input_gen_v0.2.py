@@ -14,7 +14,7 @@ def get_header_idx(infile):
             split_i = i.rstrip().split('\t')
             print (split_i)
             try:
-                mod_pep_idx = split_i.index("Peptide Modified Sequence")
+                mod_pep_idx = split_i.index("Modified Sequence")
             except:
                 mod_pep_idx = split_i.index("Peptide")
             try:
@@ -26,9 +26,9 @@ def get_header_idx(infile):
             except:
                 raise Exception("Column 'Fragment Ion' is missing the input file. Please export the results from Skyline with 'Fragment Ion' column.")
             try:
-                area_idx = split_i.index("Total Area Fragment")
+                area_idx = split_i.index("Area")
             except:
-                raise Exception("Column 'Total Area Fragment' is missing the input file. Please export the results from Skyline with 'Area' column.")
+                raise Exception("Column 'Area' is missing the input file. Please export the results from Skyline with 'Area' column.")
             try:
                 prec_z = split_i.index("Precursor Charge")
             except:
