@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<views>
+  <view name="DIA_Report" rowsource="pwiz.Skyline.Model.Databinding.Entities.Transition" sublist="Results!*" uimode="proteomic">
+    <column name="Precursor.Peptide" />
+    <column name="Precursor.Peptide.Protein.Name" />
+    <column name="Precursor.Peptide.Protein.Gene" />
+    <column name="Precursor.Peptide.Protein.Description" />
+    <column name="Precursor.ModifiedSequence" />
+    <column name="Results!*.Value.PrecursorResult.DetectionQValue" />
+    <column name="Precursor.Peptide.RetentionTimeCalculatorScore" />
+    <column name="Precursor.Peptide.PredictedRetentionTime" />
+    <column name="Precursor.Peptide.MissedCleavages" />
+    <column name="Results!*.Value.PrecursorResult.PeptideResult.PeptideRetentionTime" />
+    <column name="Precursor.Charge" />
+    <column name="Precursor.TransitionCount" />
+    <column name="Precursor.Mz" />
+    <column name="Precursor.IsDecoy" />
+    <column name="ProductMz" />
+    <column name="ProductCharge" />
+    <column name="FragmentIon" />
+    <column name="Results!*.Value.PrecursorResult.LibraryDotProduct" />
+    <column name="Results!*.Value.PrecursorResult.IsotopeDotProduct" />
+    <column name="Results!*.Value.PeakRank" />
+    <column name="Precursor.IsotopeLabelType" />
+    <column name="Results!*.Value.Area" />
+    <column name="Results!*.Value.MassErrorPPM" />
+    <column name="Results!*.Value.Chromatogram.InterpolatedData.NumberOfPoints" />
+    <column name="Results!*.Value.PointsAcrossPeak" />
+    <column name="Results!*.Value.PrecursorResult.PeptideResult.Quantification.NormalizedArea" />
+    <column name="Precursor.ResultSummary.TotalArea.Mean" />
+    <column name="Precursor.ResultSummary.TotalArea.Stdev" />
+    <column name="Precursor.ResultSummary.TotalArea.Cv" />
+    <column name="Results!*.Value.PrecursorResult.TotalArea" />
+    <column name="Results!*.Value.PrecursorResult.TotalAreaFragment" />
+    <column name="Results!*.Value.PrecursorResult.PeptideResult.ResultFile.Replicate" />
+    <column name="Precursor.LibraryName" />
+    <filter column="Precursor.IsDecoy" opname="equals" operand="False" />
+    <filter column="Results!*.Value.PrecursorResult.DetectionQValue" opname="&lt;&gt;" operand="NaN" />
+    <filter column="Results!*.Value.PrecursorResult.DetectionQValue" opname="&lt;" operand="0.01" />
+  </view>
+</views>
