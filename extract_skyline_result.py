@@ -45,12 +45,11 @@ def ext_skyline_results(infile):
 
     pep = {k.split('@')[1]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
     pro = {k.split('@')[0]:k.split('@')[0] + '@' + k.split('@')[2] for k, v in dicts.items() for j in v if j[3] != "#N/A" if float(j[a[2]]) < 0.01}
-    summary = [str(len(dicts)), str(len(pep)), str(len(pro))]
-    summary_head = ['No. of Precursors','No. of Peptides','No. of Proteins']
     output = []
     z = {}
     mmc = {}
     output1 = []
+    summary = []
     for k, v in dicts.items():
         charge = ''.join(m for m, n in {j[a[3]]:j for j in v}.items())
         miss_cleave = ''.join(m for m, n in {j[a[4]]:j for j in v}.items())
@@ -72,23 +71,30 @@ def ext_skyline_results(infile):
         raw_file.append(k)
         precursors = {}
         for j in v:
-            if j[a[0]] + '@' + j[a[1]] + '@' + j[a[5]] not in precursors:
-                precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]] = [j]
+            if j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[3]] + '@' + j[a[6]] not in precursors:
+                precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[3]] + '@' + j[a[6]]] = [j]
             else:
-                precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[6]]].append(j)
+                precursors[j[a[0]] + '@' + j[a[-1]] + '@' + j[a[1]] + '@' + j[a[5]] + '@' + j[a[3]] + '@' + j[a[6]]].append(j)
 
             if len(j[a[-1]]) not in length:
                 length[len(j[a[-1]])] = [j[a[-1]]]
             else:
                 length[len(j[a[-1]])].append(j[a[-1]])
 
-        print ("Found " + str(len(precursors)) + " peptide precursors with q-value < 0.01 in the raw file " + k)
-        
+        rawfile_pro = {}
+        rawfile_pep = {}
         for m, n in precursors.items():
-            fdr = ';'.join(j[a[2]] for j in n)
-            output1.append([k] + m.split('@') + [fdr])
+            fdr = {j[a[2]]:j[a[2]] for j in n}
+            rawfile_pro[m.split('@')[2]] = 1
+            rawfile_pep[m.split('@')[0]] = 1
+            output1.append([k] + m.split('@') + [';'.join(list(fdr))])
 
-
+        print (f"Found {str(len(precursors))} precursors, {len(rawfile_pep)} peptides corresponding to {len(rawfile_pro)} proteins with peptide q-value < 0.01 in the raw file {k}")
+        
+        summary.append([k, str(len(precursors)), str(len(rawfile_pep)), str(len(rawfile_pro))])
+    
+    summary.append(['Non-redundant Total', str(len(dicts)), str(len(pep)), str(len(pro))])
+    
     write0 = open("{0}_peptide_length_summary.txt".format(infile.rstrip('.tsv')), 'w')
     write0.write("Peptide length" + '\t' + "No. of peptides" + '\n')
     for k, v in length.items():
@@ -106,7 +112,7 @@ def ext_skyline_results(infile):
     write2 = open("{0}_missed_clavage_summary.txt".format(infile.rstrip('.tsv')), 'w')
     write2.write("Missed cleavage" + '\t' + "Peptide precursors" + '\n')
     for k, v in mmc.items():
-        print ("There are " + str(len(v)) + " peptide precursors with missed cleavage " + k)
+        print (f"There are{str(len(v))} peptide precursors with missed cleavage {k}")
         write2.write(k + '\t' + str(len(v)) + '\n')
     write2.close()
                   
@@ -117,14 +123,16 @@ def ext_skyline_results(infile):
 
     outfile1 = "{0}_raw_file_specific_peptides_and_proteins.txt".format(infile.rstrip('.tsv'))
     with open(outfile1, 'w') as outf1:
-        outf1.write('Raw File\tPeptide\tModified Peptide\tProtein\tPrecursor\tRT\tQ-values\n')
+        outf1.write('Raw File\tPeptide\tModified Peptide\tProtein\tPrecursor\tCharge(z)\tRT\tQ-values\n')
         outf1.writelines('\t'.join(i) + '\n' for i in output1)
 
+    summary_head = ['Raw File','Peptide Precursors','Peptides','Proteins']
     summrayfile = "{0}_summary.txt".format(infile.rstrip('.tsv'))
     with open(summrayfile, 'w') as sumf:
-        print ("In total, there are " + summary[0] + " peptide precursors, " + summary[1] + " peptide sequences corresponding to " + summary[2] + " proteins observed")
         sumf.write('\t'.join(summary_head) + '\n')
-        sumf.write('\t'.join(summary) + '\n')
+        sumf.writelines('\t'.join(i) + '\n' for i in summary)
+
+        print (f"In total, there are {summary[-1][1]} peptide precursors {summary[-1][2]} peptide sequences corresponding to {summary[-1][3]} proteins observed")
 
 if __name__== "__main__":
     ext_skyline_results(args.infile[0])
