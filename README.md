@@ -1,7 +1,7 @@
 # DIA-SpecLib_Result_Summarizer
 Extract the identified peptides and proteins from spectral library search of DIA proteomic data in Skyline
 
-# Note: 
+### Note:
 Prior to running the below command, in order to make sure that all the required columns are present in the Skyline output. The users can import the Skyline Report template provided here into Skyline and export their results.
 
 ## How to use DIA-SpecLib_Result_Summarizer in Windows/Linux
