@@ -112,7 +112,7 @@ def ext_skyline_results(infile):
     write2 = open("{0}_missed_clavage_summary.txt".format(infile.rstrip('.tsv')), 'w')
     write2.write("Missed cleavage" + '\t' + "Peptide precursors" + '\n')
     for k, v in mmc.items():
-        print (f"There are{str(len(v))} peptide precursors with missed cleavage {k}")
+        print (f"There are {str(len(v))} peptide precursors with missed cleavage {k}")
         write2.write(k + '\t' + str(len(v)) + '\n')
     write2.close()
                   
